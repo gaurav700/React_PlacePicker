@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-
+import { sortPlacesByDistance } from "./loc.js";
 import Places from "./components/Places";
 import { AVAILABLE_PLACES } from "./data";
 import Modal from "./components/Modal";
@@ -10,6 +10,15 @@ function App() {
   const modal = useRef();
   const selectedPlace = useRef();
   const [pickedPlaces, setPickedPlaces] = useState([]);
+
+  // sideeffects examples
+  navigator.geolocation.getCurrentPosition(() => {
+    const sortedPlaces = sortPlacesByDistance(
+      AVAILABLE_PLACES,
+      position.coords.latitude,
+      position.coords.longitude
+    );
+  });
 
   function handleStartRemovePlace(id) {
     modal.current.open();
