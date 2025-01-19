@@ -7,9 +7,14 @@ import DeleteConfirmation from "./components/DeleteConfirmation";
 import logoImg from "./assets/logo.png";
 
 function App() {
+  const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
+  const sortedPlaces = storedIds.map((id) =>
+    AVAILABLE_PLACES.find((places) => places.id === id)
+  );
+
   const modal = useRef();
   const selectedPlace = useRef();
-  const [pickedPlaces, setPickedPlaces] = useState([]);
+  const [pickedPlaces, setPickedPlaces] = useState(sortedPlaces);
   const [availablePlaces, setAvailablePlaces] = useState([]);
 
   // this executed after the app components finished
@@ -42,7 +47,7 @@ function App() {
       return [place, ...prevPickedPlaces];
     });
 
-    const storedIds = JSON.parse(localStorage.getItem("selectedPlace")) || [];
+    const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
     if (storedIds.indexOf(id) === -1) {
       localStorage.setItem(
         "selectedPlaces",
@@ -56,6 +61,12 @@ function App() {
       prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
     );
     modal.current.close();
+
+    const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
+    localStorage.setItem(
+      "selectedPlaces",
+      JSON.stringify(storedIds.filter((id) => id != selectedPlace.current))
+    );
   }
 
   return (
